@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  mongo:
+    image: mongo:4.2.5-bionic
+    restart: always
+    environment:
+      - TZ=Europe/Paris
+    env_file:
+      - ./.dev.env
+    volumes:
+      - ./services/mongo/data:/data/db
+    ports:
+      - 27017:27017
+
+  api:
+    build: ./services/api
+    restart: always
+    volumes:
+      - ./services/api:/app
+    env_file:
+      - ./.dev.env
+    depends_on:
+      - mongo
+    ports:
+      - 3000:3000
+    command: npm run dev

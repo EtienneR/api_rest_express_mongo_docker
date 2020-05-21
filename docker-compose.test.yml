@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  mongo_test:
+    container_name: mongo_test
+    image: mongo:4.2.5-bionic
+    env_file:
+      - ./.test.env
+
+  api_test:
+    container_name: api_test
+    build: ./services/api
+    volumes:
+      - ./services/api:/app
+    depends_on:
+      - mongo_test
+    env_file:
+      - ./.test.env
+    command: npm test
